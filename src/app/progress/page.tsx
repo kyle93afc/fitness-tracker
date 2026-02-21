@@ -8,7 +8,7 @@ interface Log {
 }
 
 export default function Progress() {
-  const [logs, setLogs] = useState<Log[]>(JSON.parse(localStorage.getItem('weights') || '[]'));
+  const [logs, setLogs] = useState<Log[]>([]);
   const goalDate = new Date('2026-08-31').toISOString().split('T')[0];
   const goalWeight = 90;
   const milestones = [
@@ -19,7 +19,7 @@ export default function Progress() {
   ];
 
   useEffect(() => {
-    setLogs(JSON.parse(localStorage.getItem('weights') || '[]'));
+    setLogs(typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('weights') || '[]') : []);
   }, []);
 
   const data = logs.map(log => ({

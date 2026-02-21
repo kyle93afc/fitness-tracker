@@ -12,8 +12,8 @@ interface FormData {
 export default function Log() {
   const { register, handleSubmit, reset } = useForm<FormData>();
   const onSubmit = (data: FormData) => {
-    const logs = JSON.parse(localStorage.getItem('workouts') || '[]');
-    localStorage.setItem('workouts', JSON.stringify([...logs, { ...data, date: new Date().toISOString() }]));
+    const logs = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('workouts') || '[]') : [];
+    if (typeof window !== 'undefined') localStorage.setItem('workouts', JSON.stringify([...logs, { ...data, date: new Date().toISOString() }]));
     alert('Workout logged!');
     reset();
   };

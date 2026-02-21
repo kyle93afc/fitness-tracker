@@ -11,8 +11,8 @@ interface FormData {
 export default function Prep() {
   const { register, handleSubmit, reset } = useForm<FormData>();
   const onSubmit = (data: FormData) => {
-    const logs = JSON.parse(localStorage.getItem('preps') || '[]');
-    localStorage.setItem('preps', JSON.stringify([...logs, { ...data, date: new Date().toISOString() }]));
+    const logs = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('preps') || '[]') : [];
+    if (typeof window !== 'undefined') localStorage.setItem('preps', JSON.stringify([...logs, { ...data, date: new Date().toISOString() }]));
     alert('Prep logged!');
     reset();
   };

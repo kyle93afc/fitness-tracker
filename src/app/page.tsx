@@ -11,7 +11,7 @@ interface Log {
 
 export default function Dashboard() {
   const { register, handleSubmit, reset } = useForm<{ weight: number }>();
-  const [logs, setLogs] = useState<Log[]>(JSON.parse(localStorage.getItem('weights') || '[]'));
+  const [logs, setLogs] = useState<Log[]>([]);
   const routine = [
     { day: 'Mon', time: 'AM', type: 'Push' },
     { day: 'Tue', time: 'Lunch', type: 'Pull' },
@@ -24,14 +24,14 @@ export default function Dashboard() {
   const today = format(new Date(), 'eee');
 
   useEffect(() => {
-    setLogs(JSON.parse(localStorage.getItem('weights') || '[]'));
+    setLogs(typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('weights') || '[]') : []);
   }, []);
 
   const onSubmit = (data: { weight: number }) => {
     const newLog: Log = { date: format(new Date(), 'yyyy-MM-dd'), weight: data.weight };
     const updated = [...logs, newLog].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     setLogs(updated);
-    localStorage.setItem('weights', JSON.stringify(updated));
+    if (typeof window !== 'undefined') localStorage.setItem('weights', JSON.stringify(updated));
     reset();
     alert('Weight logged!');
   };
