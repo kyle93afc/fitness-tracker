@@ -1,0 +1,9 @@
+import Database from 'better-sqlite3';
+
+const db = new Database('fitness.db');
+db.exec('CREATE TABLE IF NOT EXISTS weights (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATETIME DEFAULT CURRENT_TIMESTAMP, weight REAL)');
+db.exec('CREATE TABLE IF NOT EXISTS workouts (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATETIME DEFAULT CURRENT_TIMESTAMP, type TEXT, slot TEXT, macros TEXT, notes TEXT)');
+db.exec('CREATE TABLE IF NOT EXISTS preps (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATETIME DEFAULT CURRENT_TIMESTAMP, meals BOOLEAN, bag BOOLEAN, notes TEXT)');
+db.exec('CREATE TABLE IF NOT EXISTS family_events (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATETIME, desc TEXT)');
+
+export { db };
