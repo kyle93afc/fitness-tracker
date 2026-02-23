@@ -1,14 +1,42 @@
-import Database from 'better-sqlite3';
-import path from 'path';
+import { sql } from '@vercel/postgres';
 
-const dbPath = process.env.VERCEL
-  ? path.join('/tmp', 'fitness.db')
-  : path.join(process.cwd(), 'fitness.db');
+export async function createTables() {
+  await sql`
+    CREATE TABLE IF NOT EXISTS weights (
+      id SERIAL PRIMARY KEY,
+      date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      weight REAL
+    )
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS workouts (
+      id SERIAL PRIMARY KEY,
+      date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      type TEXT,
+      slot TEXT,
+      macros TEXT,
+      notes TEXT
+    )
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS preps (
+      id SERIAL PRIMARY KEY,
+      date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      meals BOOLEAN,
+      bag BOOLEAN,
+      notes TEXT
+    )
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS family_events (
+      id SERIAL PRIMARY KEY,
+      date TIMESTAMP,
+      desc TEXT
+    )
+  `;
+}
 
-const db = new Database(dbPath);
-db.exec('CREATE TABLE IF NOT EXISTS weights (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATETIME DEFAULT CURRENT_TIMESTAMP, weight REAL)');
-db.exec('CREATE TABLE IF NOT EXISTS workouts (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATETIME DEFAULT CURRENT_TIMESTAMP, type TEXT, slot TEXT, macros TEXT, notes TEXT)');
-db.exec('CREATE TABLE IF NOT EXISTS preps (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATETIME DEFAULT CURRENT_TIMESTAMP, meals BOOLEAN, bag BOOLEAN, notes TEXT)');
-db.exec('CREATE TABLE IF NOT EXISTS family_events (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATETIME, desc TEXT)');
+// Initialize tables on import
+createTables().catch(console.error);
 
-export { db };
+export { sql as db };
